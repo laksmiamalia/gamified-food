@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from cluster_descriptions import cluster_descriptions  # Import the dictionary
 
 # Load your data
 df = pd.read_csv('clustered_games.csv')
@@ -12,16 +13,16 @@ cluster_counts.columns = ['Cluster', 'Count']
 # Streamlit app layout
 st.title('Game Clustering App')
 
+# Pie chart showing the proportion of each cluster
+pie_chart = px.pie(cluster_counts, names='Cluster', values='Count', title='Proportion of Each Cluster')
+st.plotly_chart(pie_chart)
+
 # Dropdown to select cluster
 selected_cluster = st.selectbox(
     'Select Cluster',
     options=df['Cluster'].unique(),
     format_func=lambda x: f'Cluster {x}'
 )
-
-# Pie chart showing the proportion of each cluster
-pie_chart = px.pie(cluster_counts, names='Cluster', values='Count', title='Proportion of Each Cluster')
-st.plotly_chart(pie_chart)
 
 # Bar chart based on the selected cluster
 filtered_df = df[df['Cluster'] == selected_cluster]
@@ -31,7 +32,7 @@ bar_chart = px.bar(filtered_df, x='Genre', y='Global_Sales',
 st.plotly_chart(bar_chart)
 
 # Display cluster description
-description = df[df['Cluster'] == selected_cluster]['Description'].iloc[0]
+description = cluster_descriptions.get(selected_cluster, "Description not available.")
 st.subheader('Cluster Description')
 st.write(description)
 
