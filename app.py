@@ -12,16 +12,16 @@ cluster_counts.columns = ['Cluster', 'Count']
 # Streamlit app layout
 st.title('Game Clustering App')
 
+# Pie chart showing the proportion of each cluster
+pie_chart = px.pie(cluster_counts, names='Cluster', values='Count', title='Proportion of Each Cluster')
+st.plotly_chart(pie_chart)
+
 # Dropdown to select cluster
 selected_cluster = st.selectbox(
     'Select Cluster',
     options=df['Cluster'].unique(),
     format_func=lambda x: f'Cluster {x}'
 )
-
-# Pie chart showing the proportion of each cluster
-pie_chart = px.pie(cluster_counts, names='Cluster', values='Count', title='Proportion of Each Cluster')
-st.plotly_chart(pie_chart)
 
 # Bar chart based on the selected cluster
 filtered_df = df[df['Cluster'] == selected_cluster]
