@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-# Load your dataset into 'merged_data'
+# Load your dataset
 merged_data = pd.read_csv('merged_data.csv')
 
 # Define functions to categorize food items
@@ -122,5 +122,22 @@ activity_level = st.selectbox('Activity Level', ['sedentary', 'lightly active', 
 if st.button('Generate Nutrition Plan'):
     processed_data = process_food_data(merged_data, weight_kg, height_cm, age_years, gender, activity_level)
     
-    st.write('Here is your personalized data:')
-    st.write(processed_data.head())  # Display the processed data (or relevant parts)
+    # Display menus
+    st.write('Here is your personalized menu:')
+    
+    breakfast_menu = processed_data[processed_data['Meal_Category'] == 'Breakfast']
+    lunch_menu = processed_data[processed_data['Meal_Category'] == 'Lunch']
+    dinner_menu = processed_data[processed_data['Meal_Category'] == 'Dinner']
+    snack_menu = processed_data[processed_data['Meal_Category'] == 'Snack']
+    
+    st.subheader('Breakfast Menu')
+    st.write(breakfast_menu)
+    
+    st.subheader('Lunch Menu')
+    st.write(lunch_menu)
+    
+    st.subheader('Dinner Menu')
+    st.write(dinner_menu)
+
+    st.subheader('Snack')
+    st.write(snack_menu)
