@@ -1,42 +1,79 @@
 import streamlit as st
 import pandas as pd
 
+# Load your dataset into 'merged_data'
 merged_data = pd.read_csv('merged_data.csv')
 
 # Define functions to categorize food items
 def categorize_protein(row):
-    return 'High-Protein' if row['Protein'] > 20 else 'Not High-Protein'
+    if row['Protein'] > 20:
+        return 'High-Protein'
+    else:
+        return 'Not High-Protein'
 
 def categorize_carb(row):
-    return 'Low-Carb' if row['Carbohydrates'] < 10 else 'Not Low-Carb'
+    if row['Carbohydrates'] < 10:
+        return 'Low-Carb'
+    else:
+        return 'Not Low-Carb'
 
 def categorize_fat(row):
-    return 'Low-Fat' if row['Fat'] < 5 else 'Not Low-Fat'
+    if row['Fat'] < 5:
+        return 'Low-Fat'
+    else:
+        return 'Not Low-Fat'
 
 def categorize_fiber(row):
-    return 'High-Fiber' if row['Dietary Fiber'] > 5 else 'Not High-Fiber'
+    if row['Dietary Fiber'] > 5:
+        return 'High-Fiber'
+    else:
+        return 'Not High-Fiber'
 
 def categorize_sugar(row):
-    return 'Low-Sugar' if row['Sugars'] < 5 else 'Not Low-Sugar'
+    if row['Sugars'] < 5:
+        return 'Low-Sugar'
+    else:
+        return 'Not Low-Sugar'
 
 def categorize_cal(row):
-    return 'Low-Cal' if row['Caloric Value'] < 100 else 'Not Low-Cal'
+    if row['Caloric Value'] < 100:
+        return 'Low-Cal'
+    else:
+        return 'Not Low-Cal'
 
 def categorize_chol(row):
-    return 'Low-Chol' if row['Cholesterol'] < 20 else 'Not Low-Chol'
+    if row['Cholesterol'] < 20:
+        return 'Low-Chol'
+    else:
+        return 'Not Low-Chol'
 
 def categorize_sodium(row):
-    return 'Low-Sodium' if row['Sodium'] < 10 else 'Not Low-Sodium'
+    if row['Sodium'] < 10:
+        return 'Low-Sodium'
+    else:
+        return 'Not Low-Sodium'
 
-def categorize_meal(row):
-    if row['Caloric Value'] > 300 and row['Protein'] > 15:
+# Apply the functions to the DataFrame
+def apply_categorization(merged_data):
+    merged_data['Protein_Category'] = merged_data.apply(categorize_protein, axis=1)
+    merged_data['Carbohydrate_Category'] = merged_data.apply(categorize_carb, axis=1)
+    merged_data['Fat_Category'] = merged_data.apply(categorize_fat, axis=1)
+    merged_data['Fiber_Category'] = merged_data.apply(categorize_fiber, axis=1)
+    merged_data['Sugar_Category'] = merged_data.apply(categorize_sugar, axis=1)
+    merged_data['Calorie_Category'] = merged_data.apply(categorize_cal, axis=1)
+    merged_data['Cholesterol_Category'] = merged_data.apply(categorize_chol, axis=1)
+    merged_data['Sodium_Category'] = merged_data.apply(categorize_sodium, axis=1)
+    return merged_data
+
+def categorize_meal(item):
+    if item['Caloric Value'] > 300 and item['Protein'] > 15:
         return 'Dinner'
-    elif row['Caloric Value'] > 200 and row['Protein'] > 10:
+    elif item['Caloric Value'] > 200 and item['Protein'] > 10:
         return 'Lunch'
-    elif row['Carbohydrates'] > 30:
+    elif item['Carbohydrates'] > 30:
         return 'Breakfast'
     else:
-        return 'Snacks'
+        return 'Snack'
 
 def calculate_caloric_needs(weight_kg, height_cm, age_years, gender, activity_level):
     if gender == 'male':
@@ -66,24 +103,9 @@ def process_food_data(merged_data, weight_kg, height_cm, age_years, gender, acti
     user_daily_calories = calculate_caloric_needs(weight_kg, height_cm, age_years, gender, activity_level)
     merged_data['User_Calorie_Needs'] = user_daily_calories
     merged_data['Caloric_Intake_Category'] = merged_data.apply(lambda x: categorize_caloric_intake(x, user_daily_calories), axis=1)
-    
-    # Apply additional categorizations
-    merged_data['Protein_Category'] = merged_data.apply(categorize_protein, axis=1)
-    merged_data['Carbohydrate_Category'] = merged_data.apply(categorize_carb, axis=1)
-    merged_data['Fat_Category'] = merged_data.apply(categorize_fat, axis=1)
-    merged_data['Fiber_Category'] = merged_data.apply(categorize_fiber, axis=1)
-    merged_data['Sugar_Category'] = merged_data.apply(categorize_sugar, axis=1)
-    merged_data['Calorie_Category'] = merged_data.apply(categorize_cal, axis=1)
-    merged_data['Cholesterol_Category'] = merged_data.apply(categorize_chol, axis=1)
-    merged_data['Sodium_Category'] = merged_data.apply(categorize_sodium, axis=1)
-    
-    # Categorize meal types
+    merged_data = apply_categorization(merged_data)
     merged_data['Meal_Category'] = merged_data.apply(categorize_meal, axis=1)
-    
-    # Filter out non-recommended foods
-    recommended_data = merged_data[merged_data['Caloric_Intake_Category'] == 'Moderate-Calorie Meal']
-    
-    return recommended_data
+    return merged_data
 
 # Streamlit user form
 st.title('Personalized Nutrition Plan')
@@ -98,23 +120,7 @@ gender = st.selectbox('Gender', ['male', 'female'])
 activity_level = st.selectbox('Activity Level', ['sedentary', 'lightly active', 'moderately active', 'very active', 'super active'])
 
 if st.button('Generate Nutrition Plan'):
-    # Load your dataset
-    
-    # Process the data
     processed_data = process_food_data(merged_data, weight_kg, height_cm, age_years, gender, activity_level)
     
-    # Display menus
-    st.write('Here is your personalized menu:')
-    
-    breakfast_menu = processed_data[processed_data['Meal_Category'] == 'Breakfast']
-    lunch_menu = processed_data[processed_data['Meal_Category'] == 'Lunch']
-    dinner_menu = processed_data[processed_data['Meal_Category'] == 'Dinner']
-    
-    st.subheader('Breakfast Menu')
-    st.write(breakfast_menu)
-    
-    st.subheader('Lunch Menu')
-    st.write(lunch_menu)
-    
-    st.subheader('Dinner Menu')
-    st.write(dinner_menu)
+    st.write('Here is your personalized data:')
+    st.write(processed_data.head())  # Display the processed data (or relevant parts)
