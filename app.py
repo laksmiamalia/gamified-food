@@ -46,7 +46,7 @@ activity_level = st.selectbox('Activity Level', ['sedentary', 'lightly active', 
 
 if st.button('Generate Nutrition Plan'):
     # Assume you have loaded your dataset into 'merged_data'
-    # merged_data = pd.read_csv('your_data.csv')
+    merged_data = pd.read_csv('your_data.csv')
     processed_data = process_food_data(merged_data, weight_kg, height_cm, age_years, gender, activity_level)
     
     st.write('Here is your personalized data:')
