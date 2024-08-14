@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # Load data
- merged_data = pd.read_csv('merged_data.csv')
+merged_data = pd.read_csv('merged_data.csv')
 
 # Include the functions from above here
 def calculate_caloric_needs(weight_kg, height_cm, age_years, gender, activity_level):
