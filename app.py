@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-# Load data
+# Load dataset
 merged_data = pd.read_csv('merged_data.csv')
 
 # Include the functions from above here
@@ -33,7 +33,11 @@ def process_food_data(merged_data, weight_kg, height_cm, age_years, gender, acti
     user_daily_calories = calculate_caloric_needs(weight_kg, height_cm, age_years, gender, activity_level)
     merged_data['User_Calorie_Needs'] = user_daily_calories
     merged_data['Caloric_Intake_Category'] = merged_data.apply(lambda x: categorize_caloric_intake(x, user_daily_calories), axis=1)
-    return merged_data
+    
+    # Filter out non-recommended foods
+    recommended_data = merged_data[merged_data['Caloric_Intake_Category'] == 'Moderate-Calorie Meal']
+    
+    return recommended_data
 
 # Streamlit user form
 st.title('Personalized Nutrition Plan')
@@ -48,8 +52,23 @@ gender = st.selectbox('Gender', ['male', 'female'])
 activity_level = st.selectbox('Activity Level', ['sedentary', 'lightly active', 'moderately active', 'very active', 'super active'])
 
 if st.button('Generate Nutrition Plan'):
-    # Assume you have loaded your dataset into 'merged_data'
+    # Load your dataset
+    
+    # Process the data
     processed_data = process_food_data(merged_data, weight_kg, height_cm, age_years, gender, activity_level)
     
-    st.write('Here is your personalized data:')
-    st.write(processed_data.head())  # Display the processed data (or relevant parts)
+    # Display menus
+    st.write('Here is your personalized menu:')
+    
+    breakfast_menu = processed_data[processed_data['Meal Category'] == 'breakfast']
+    lunch_menu = processed_data[processed_data['Meal Category'] == 'lunch']
+    dinner_menu = processed_data[processed_data['Meal Category'] == 'dinner']
+    
+    st.subheader('Breakfast Menu')
+    st.write(breakfast_menu)
+    
+    st.subheader('Lunch Menu')
+    st.write(lunch_menu)
+    
+    st.subheader('Dinner Menu')
+    st.write(dinner_menu)
