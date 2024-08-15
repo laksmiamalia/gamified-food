@@ -141,3 +141,39 @@ if st.button('Generate Nutrition Plan'):
 
     st.subheader('Snack')
     st.write(snack_menu)
+
+    # Add Visualizations
+
+    # Bar Chart: Caloric Value by Meal Category
+    st.write("### Caloric Value by Meal Category")
+    plt.figure(figsize=(10, 6))
+    sns.barplot(x='Meal_Category', y='Caloric Value', data=processed_data, ci=None)
+    plt.title('Caloric Value by Meal Category')
+    st.pyplot(plt)
+
+    # Pie Chart: Macronutrient Distribution for Lunch
+    st.write("### Macronutrient Distribution for Lunch")
+    lunch_macronutrients = lunch_menu[['Protein', 'Carbohydrates', 'Fat']].sum()
+    plt.figure(figsize=(6, 6))
+    plt.pie(lunch_macronutrients, labels=lunch_macronutrients.index, autopct='%1.1f%%', startangle=140)
+    plt.title('Macronutrient Distribution for Lunch')
+    st.pyplot(plt)
+
+    # Line Chart: Nutritional Content Across Meals
+    st.write("### Nutritional Content Across Meals")
+    plt.figure(figsize=(10, 6))
+    sns.lineplot(x='Meal_Category', y='Caloric Value', data=processed_data, marker='o', label='Caloric Value')
+    sns.lineplot(x='Meal_Category', y='Protein', data=processed_data, marker='o', label='Protein')
+    sns.lineplot(x='Meal_Category', y='Carbohydrates', data=processed_data, marker='o', label='Carbohydrates')
+    sns.lineplot(x='Meal_Category', y='Fat', data=processed_data, marker='o', label='Fat')
+    plt.title('Nutritional Content Across Meals')
+    plt.legend()
+    st.pyplot(plt)
+
+    # Correlation Heatmap
+    st.write("### Correlation Heatmap of Nutritional Data")
+    plt.figure(figsize=(10, 6))
+    correlation_matrix = processed_data[['Caloric Value', 'Protein', 'Carbohydrates', 'Fat', 'Dietary Fiber', 'Sugars']].corr()
+    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', vmin=-1, vmax=1)
+    plt.title('Correlation Heatmap')
+    st.pyplot(plt)
