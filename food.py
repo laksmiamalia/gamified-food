@@ -119,7 +119,7 @@ weight_kg = st.number_input('Weight (kg)', min_value=30.0, max_value=200.0, valu
 height_cm = st.number_input('Height (cm)', min_value=140.0, max_value=220.0, value=170.0)
 age_years = st.number_input('Age (years)', min_value=18, max_value=100, value=30)
 gender = st.selectbox('Gender', ['male', 'female'])
-activity_level = st.selectbox('Activity Level', ['sedentary', 'lightly active', 'moderately active', 'very active', 'super active'])
+activity_level = st.selectbox('Activity Level', ['Sedentary', 'Lightly Active', 'Moderately Active', 'Very Active', 'Super Active'])
 
 if st.button('Generate Nutrition Plan'):
     processed_data = process_food_data(merged_data, weight_kg, height_cm, age_years, gender, activity_level)
