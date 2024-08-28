@@ -111,7 +111,7 @@ def process_food_data(merged_data, weight_kg, height_cm, age_years, gender, acti
     return merged_data
 
 # Streamlit user form
-st.title('Personalized Nutrition Plan')
+st.set_page_config(page_title="Personalized Nutrition Plan", page_icon="🥗")
 
 st.header('Enter Your Information')
 
