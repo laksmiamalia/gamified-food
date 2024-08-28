@@ -121,6 +121,11 @@ age_years = st.number_input('Age (years)', min_value=18, max_value=100, value=30
 gender = st.selectbox('Gender', ['male', 'female'])
 activity_level = st.selectbox('Activity Level', ['Sedentary', 'Lightly Active', 'Moderately Active', 'Very Active', 'Super Active'])
 
+# Display activity description
+description = activity_descriptions.get(activity_level, 'Description not available.')
+st.subheader('Activity Description')
+st.write(description)
+
 if st.button('Generate Nutrition Plan'):
     processed_data = process_food_data(merged_data, weight_kg, height_cm, age_years, gender, activity_level)
     
