@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from activity_descriptions import activity_descriptions  # Import the dictionary
 
 # Load your dataset
 merged_data = pd.read_csv('merged_data.csv')
